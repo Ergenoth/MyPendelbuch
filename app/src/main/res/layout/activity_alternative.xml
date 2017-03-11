@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.krystan.mypendelbuch.ActivityAlternative">
+
+    <TextView
+        android:id="@+id/TextAlternativeLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="13dp"
+        android:text="@string/StringNameAlternative"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:id="@+id/EditAlternativeLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:layout_alignTop="@+id/TextAlternativeLocation"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/TextAlternativeDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="27dp"
+        android:text="@string/StringKilometerAlternative"
+        android:layout_below="@+id/EditAlternativeLocation"
+        android:layout_alignStart="@+id/TextAlternativeLocation" />
+
+    <EditText
+        android:id="@+id/EditAlternativeDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:layout_alignTop="@+id/TextAlternativeDistance"
+        android:layout_alignParentEnd="true"
+        android:digits="@string/DigitsLocale" />
+
+    <TextView
+        android:id="@+id/TextAlternativePrivateCar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/TextAlternativeDistance"
+        android:layout_below="@+id/EditAlternativeDistance"
+        android:layout_marginTop="22dp"
+        android:text="@string/StringPrivateCar" />
+
+    <ToggleButton
+        android:id="@+id/ToggleButtonAlternativeCar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/EditAlternativeDistance"
+        android:layout_alignTop="@+id/TextAlternativePrivateCar"
+        android:checked="true"
+        android:textOff="@string/StringNein"
+        android:textOn="@string/StringJa" />
+
+    <Button
+        android:id="@+id/ButtonWorkAlternative"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/TextAlternativePrivateCar"
+        android:layout_centerVertical="true"
+        android:onClick="buttonCommuneClick"
+        android:text="@string/StringComuteWork"
+        android:textAllCaps="false"
+        android:layout_toStartOf="@+id/ToggleButtonAlternativeCar" />
+
+    <Button
+        android:id="@+id/ButtonHomeAlternative"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/ButtonWorkAlternative"
+        android:layout_alignBottom="@+id/ButtonWorkAlternative"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
+        android:onClick="buttonCommuneClick"
+        android:text="@string/StringCommuteHome"
+        android:textAllCaps="false" />
+</RelativeLayout>

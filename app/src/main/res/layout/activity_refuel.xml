@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.krystan.mypendelbuch.ActivityRefuel">
+
+    <TextView
+        android:id="@+id/TextNameStation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="@string/StringGasStation"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="11dp" />
+
+    <TextView
+        android:id="@+id/TextDistanceAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/TextNameStation"
+        android:layout_below="@+id/EditNameStation"
+        android:layout_marginTop="23dp"
+        android:text="@string/StringDistanceOverall"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/TextDistanceDrove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/TextDistanceAll"
+        android:layout_below="@+id/EditDistanceAll"
+        android:layout_marginTop="30dp"
+        android:text="@string/StringDistanceDrove"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/TextPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/TextDistanceDrove"
+        android:layout_below="@+id/EditDistanceDrove"
+        android:layout_marginTop="26dp"
+        android:text="@string/StringPrice"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/TextAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/StringAmount"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_alignBaseline="@+id/EditAmount"
+        android:layout_alignBottom="@+id/EditAmount"
+        android:layout_alignStart="@+id/TextPrice" />
+
+    <EditText
+        android:id="@+id/EditNameStation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:layout_alignBaseline="@+id/TextNameStation"
+        android:layout_alignBottom="@+id/TextNameStation"
+        android:layout_alignStart="@+id/EditDistanceAll" />
+
+    <EditText
+        android:id="@+id/EditDistanceAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:layout_alignBaseline="@+id/TextDistanceAll"
+        android:layout_alignBottom="@+id/TextDistanceAll"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="11dp"
+        android:digits="@string/DigitsLocale" />
+
+    <EditText
+        android:id="@+id/EditDistanceDrove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/EditDistanceAll"
+        android:layout_below="@+id/EditDistanceAll"
+        android:layout_marginTop="14dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:digits="@string/DigitsLocale" />
+
+    <EditText
+        android:id="@+id/EditPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/EditDistanceDrove"
+        android:layout_below="@+id/EditDistanceDrove"
+        android:layout_marginTop="13dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:digits="@string/DigitsLocale" />
+
+    <EditText
+        android:id="@+id/EditAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/EditPrice"
+        android:layout_centerVertical="true"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:digits="@string/DigitsLocale" />
+
+    <Button
+        android:id="@+id/ButtonSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/EditAmount"
+        android:layout_alignStart="@+id/TextAmount"
+        android:layout_below="@+id/EditAmount"
+        android:layout_marginTop="20dp"
+        android:onClick="handleButtonClick"
+        android:text="@string/StringSave"
+        android:textAllCaps="false" />
+
+</RelativeLayout>

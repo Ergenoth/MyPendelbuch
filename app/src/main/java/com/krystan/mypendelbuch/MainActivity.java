@@ -1,0 +1,190 @@
+package com.krystan.mypendelbuch;
+
+import android.Manifest;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+
+import com.krystan.mypendelbuch.common.SettingsHelper;
+import com.krystan.mypendelbuch.csv.CsvExportCommune;
+import com.krystan.mypendelbuch.csv.CsvExportRefuel;
+import com.krystan.mypendelbuch.database.AppDbHelper;
+import com.krystan.mypendelbuch.database.CommuneTableContract;
+
+public class MainActivity extends AppCompatActivity {
+    /* -------------------------------- *
+     * Private members
+     * -------------------------------- */
+    private AppDbHelper dbHelper = null;
+    private SettingsHelper settingsHelper = null;
+
+    /* -------------------------------- *
+     * Public methods
+     * -------------------------------- */
+    /**
+     * Handles the button click from all buttons on them ain activity.<br>
+     * The method decides which function will be executed
+     *
+     * @param view the view or in other words the widget which issued the method call
+     */
+    public void handleButtonClick(View view) {
+        switch (view.getId()) {
+            case R.id.ButtonWorkDefault:
+                handleCommuneButton(
+                        settingsHelper.getSettingValue(SettingsHelper.SETTING_HOME),
+                        settingsHelper.getSettingValue(SettingsHelper.SETTING_WORK),
+                        Integer.parseInt(settingsHelper.getSettingValue(SettingsHelper.SETTING_DISTANCE)),
+                        R.id.ToggleButtonDefaultCar);
+                break;
+            case R.id.ButtonDefaultHome:
+                handleCommuneButton(
+                        settingsHelper.getSettingValue(SettingsHelper.SETTING_WORK),
+                        settingsHelper.getSettingValue(SettingsHelper.SETTING_HOME),
+                        Integer.parseInt(settingsHelper.getSettingValue(SettingsHelper.SETTING_DISTANCE)),
+                        R.id.ToggleButtonDefaultCar);
+                break;
+            case R.id.ButtonExportCommune:
+                /*Export commune entries*/
+                CsvExportCommune csvExportCommune = new CsvExportCommune(dbHelper);
+                csvExportCommune.createCSV();
+                Toast.makeText(this, "CSV-Datei wurde erstellt", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.ButtonExportRefuel:
+                /*Export refuel entries*/
+                CsvExportRefuel csvExportRefuel = new CsvExportRefuel(dbHelper);
+                csvExportRefuel.createCSV();
+                /*Show that everything worked*/
+                Toast.makeText(this, "CSV-Datei wurde erstellt", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.ButtonAlternative:
+                Intent altIntent = new Intent(this, ActivityAlternative.class);
+                startActivity(altIntent);
+                break;
+            case R.id.ButtonRefuel:
+                Intent refuelIntent = new Intent(this, ActivityRefuel.class);
+                startActivity(refuelIntent);
+                break;
+        }
+    }
+
+    /* -------------------------------- *
+     * Overrides AppCompatActivity
+     * -------------------------------- */
+    /** {@inheritDoc} */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        /*Load the database object*/
+        dbHelper = AppDbHelper.getDbHelper(getApplicationContext());
+
+        /*Load the settings for the application*/
+        settingsHelper = SettingsHelper.getSettingsHelper(getApplicationContext());
+
+        /*Check if the application has the permission to write to the external storage*/
+        verifyStoragePermissions();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onDestroy() {
+        /*Close the database when the app is closed*/
+        dbHelper.close();
+        /*Destroy this activity and the whole application*/
+        super.onDestroy();
+    }
+
+    /* -------------------------------- *
+     * Overrides android.app.Activity
+     * -------------------------------- */
+    /** {@inheritDoc} */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        /*Check if we handle the menu item*/
+        switch(item.getItemId()) {
+            case R.id.settings:
+                Intent settingsIntent = new Intent(this, ActivitySettings.class);
+                startActivity(settingsIntent);
+                return true;
+        }
+
+        /*Default call to the super method implementation if the menu item is not handled*/
+        return super.onOptionsItemSelected(item);
+    }
+
+    /* -------------------------------- *
+     * Private methods
+     * -------------------------------- */
+    /**
+     * Checks and ensures that the application is able to write to the external storage
+     */
+    private void verifyStoragePermissions() {
+        /*Check if permission is already granted*/
+        int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        /*If there is no permission, the app take the permission and asks the user politely*/
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
+    }
+
+    /**
+     * Handles when one of the commune buttons pressed.<br>
+     * Fills the values map with the values designed for the communes table
+     *
+     * @param departure the name of the location where the departure is
+     * @param destination the name of the location where the destination is
+     * @param distance the distance between the start and end point
+     * @param privateCarID the id of the toggle button for the private car
+     */
+    private void handleCommuneButton(String departure, String destination, int distance, int privateCarID) {
+        /*Fill the values*/
+        ContentValues values = new ContentValues();
+        values.put(CommuneTableContract.COLUMN_NAME_DEPARTURE_LOCATION, departure);
+        values.put(CommuneTableContract.COLUMN_NAME_ARRIVAL_LOCATION, destination);
+        values.put(CommuneTableContract.COLUMN_NAME_DISTANCE, distance);
+        values.put(CommuneTableContract.COLUMN_NAME_PRIVATE_CAR, isPrivateCar(privateCarID).toString());
+
+        /*Insert the values into the database*/
+        dbHelper.insert(CommuneTableContract.TABLE_NAME, values);
+
+        /*Show toast that the record was saved*/
+        showCommuneToast();
+    }
+
+    /**
+     * Determines if the toggle button for the private car is switched on or off
+     *
+     * @return {@code true} if the toggle button is switched on; otherwise {@code false}
+     */
+    private Boolean isPrivateCar(int widgetID) {
+        ToggleButton toggleButton = (ToggleButton)findViewById(widgetID);
+        Boolean isPrivate = new Boolean(toggleButton.isChecked());
+        return isPrivate;
+    }
+
+    /**
+     * Shows the toast, that the save process was successful
+     */
+    private void showCommuneToast() {
+        Toast savedToast = Toast.makeText(this, "Datenbankeintrag erfolgreich gespeichert", Toast.LENGTH_SHORT);
+        savedToast.show();
+    }
+}

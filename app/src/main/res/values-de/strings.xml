@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyPendelbuch</string>
+    <string name="StringCommuteHome">Pendeln nach Hause</string>
+    <string name="StringComuteWork">Pendeln zur Arbeit</string>
+    <string name="StringCommuteWorkAlt">Pendeln zur Arbeit von Alternativ</string>
+    <string name="StringCommuteAlt">Pendeln zu Alternativ</string>
+    <string name="StringRefuel">Tanken</string>
+    <string name="StringDefaultWay">Standard Weg</string>
+    <string name="StringPrivateCar">Privates Auto?</string>
+    <string name="StringJa">Ja</string>
+    <string name="StringNein">Nein</string>
+    <string name="StringAltWay">Alternativer Weg</string>
+    <string name="StringExportCommune">Export Pendeln</string>
+    <string name="StringExportRefuel">Export Tanken</string>
+    <string name="StringGasStation">Tankstelle</string>
+    <string name="StringDistanceOverall">Gesamt Kilometer</string>
+    <string name="StringDistanceDrove">Gefahrene Kilometer</string>
+    <string name="StringPrice">Preis</string>
+    <string name="StringAmount">Getankte Liter</string>
+    <string name="StringSave">Speichern</string>
+    <string name="StringNameAlternative">Alternative</string>
+    <string name="StringKilometerAlternative">Alternative Entfernung</string>
+    <string name="StringSettings">Einstellungen</string>
+    <string name="StringSettingHome">Zuhause</string>
+    <string name="StringSettingWork">Arbeit</string>
+    <string name="StringSettingDistance">Strecke</string>
+    <string name="DigitsLocale">0123456789,</string>
+</resources>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.krystan.mypendelbuch.ActivitySettings">
+
+    <TextView
+        android:id="@+id/TextSettingHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="14dp"
+        android:text="@string/StringSettingHome" />
+
+    <TextView
+        android:id="@+id/TextSettingsWork"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/StringSettingWork"
+        android:layout_alignTop="@+id/EditSettingsWork"
+        android:layout_alignStart="@+id/TextSettingHome" />
+
+    <TextView
+        android:id="@+id/TextSettingsDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/StringSettingDistance"
+        android:layout_alignTop="@+id/EditSettingsDistance"
+        android:layout_alignStart="@+id/TextSettingsWork" />
+
+    <EditText
+        android:id="@+id/EditSettingsHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/TextSettingHome"
+        android:layout_marginStart="39dp"
+        android:layout_toEndOf="@+id/TextSettingHome"
+        android:ems="10"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/EditSettingsWork"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:layout_marginTop="25dp"
+        android:layout_below="@+id/EditSettingsHome"
+        android:layout_alignStart="@+id/EditSettingsHome" />
+
+    <EditText
+        android:id="@+id/EditSettingsDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/EditSettingsWork"
+        android:layout_below="@+id/EditSettingsWork"
+        android:layout_marginTop="22dp"
+        android:ems="10"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/ButtonSettingsSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/EditSettingsDistance"
+        android:layout_alignStart="@+id/TextSettingsDistance"
+        android:layout_below="@+id/EditSettingsDistance"
+        android:layout_marginTop="24dp"
+        android:onClick="buttonClickSave"
+        android:text="@string/StringSave"
+        android:textAllCaps="false" />
+</RelativeLayout>

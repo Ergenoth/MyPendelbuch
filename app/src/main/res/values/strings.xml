@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">MyPendelbuch</string>
+    <string name="StringCommuteHome">Commune home</string>
+    <string name="StringComuteWork">Commune work</string>
+    <string name="StringRefuel">Refuel</string>
+    <string name="StringDefaultWay">Standard Weg</string>
+    <string name="StringPrivateCar">Private car?</string>
+    <string name="StringJa">Yes</string>
+    <string name="StringNein">No</string>
+    <string name="StringAltWay">Alternative way</string>
+    <string name="StringExportCommune">Export commune</string>
+    <string name="StringExportRefuel">Export refuel</string>
+    <string name="StringGasStation">Gas station</string>
+    <string name="StringDistanceOverall">Total distance</string>
+    <string name="StringDistanceDrove">Drove distance</string>
+    <string name="StringPrice">Price</string>
+    <string name="StringAmount">Amount of gas</string>
+    <string name="StringSave">Save</string>
+    <string name="StringNameAlternative">Alternative</string>
+    <string name="StringKilometerAlternative">Alternative distance</string>
+    <string name="StringSettings">Settings</string>
+    <string name="title_activity_settings">ActivitySettings</string>
+    <string name="StringSettingHome">Home location</string>
+    <string name="StringSettingWork">Work location</string>
+    <string name="StringSettingDistance">Default distance</string>
+    <string name="DigitsLocale">0123456789.</string>
+</resources>
