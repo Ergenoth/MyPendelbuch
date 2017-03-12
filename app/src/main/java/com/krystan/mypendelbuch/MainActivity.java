@@ -16,18 +16,19 @@ import android.widget.ToggleButton;
 
 import com.krystan.mypendelbuch.common.ActivityHelper;
 import com.krystan.mypendelbuch.common.CommuneDataBean;
+import com.krystan.mypendelbuch.common.CommuneHelper;
 import com.krystan.mypendelbuch.common.SettingsHelper;
 import com.krystan.mypendelbuch.csv.CsvExportCommune;
 import com.krystan.mypendelbuch.csv.CsvExportRefuel;
 import com.krystan.mypendelbuch.database.AppDbHelper;
 import com.krystan.mypendelbuch.database.CommuneTableContract;
+import com.krystan.mypendelbuch.exception.CommuneException;
 
 public class MainActivity extends AppCompatActivity {
     /* -------------------------------- *
      * Private members
      * -------------------------------- */
     private AppDbHelper dbHelper = null;
-    private SettingsHelper settingsHelper = null;
 
     /* -------------------------------- *
      * Public methods
@@ -41,37 +42,23 @@ public class MainActivity extends AppCompatActivity {
     public void handleButtonClick(View view) {
         switch (view.getId()) {
             case R.id.ButtonWorkDefault:
-                CommuneDataBean dataBeanWork = getCommuneDatabean();
-                /*Something went wrong. Don't proceed further*/
-                if (dataBeanWork == null) {
-                    return;
-                }
-                handleCommuneButton(
-                        dataBeanWork.getHomeLocation(),
-                        dataBeanWork.getWorkLocation(),
-                        dataBeanWork.getDefaultDistance().intValue(),
-                        R.id.ToggleButtonDefaultCar);
+                handleCommuneButton(true);
                 break;
             case R.id.ButtonDefaultHome:
-                CommuneDataBean dataBeanHome = getCommuneDatabean();
-                /*Something went wrong. Don't proceed further*/
-                if (dataBeanHome == null) {
-                    return;
-                }
-                handleCommuneButton(work, home, Integer.parseInt(distance), R.id.ToggleButtonDefaultCar);
+                handleCommuneButton(false);
                 break;
             case R.id.ButtonExportCommune:
                 /*Export commune entries*/
                 CsvExportCommune csvExportCommune = new CsvExportCommune(dbHelper);
                 csvExportCommune.createCSV();
-                Toast.makeText(this, "CSV-Datei wurde erstellt", Toast.LENGTH_SHORT).show();
+                ActivityHelper.showToast(this, getString(R.string.CSVSuccess));
                 break;
             case R.id.ButtonExportRefuel:
                 /*Export refuel entries*/
                 CsvExportRefuel csvExportRefuel = new CsvExportRefuel(dbHelper);
                 csvExportRefuel.createCSV();
                 /*Show that everything worked*/
-                Toast.makeText(this, "CSV-Datei wurde erstellt", Toast.LENGTH_SHORT).show();
+                ActivityHelper.showToast(this, getString(R.string.CSVSuccess));
                 break;
             case R.id.ButtonAlternative:
                 Intent altIntent = new Intent(this, ActivityAlternative.class);
@@ -95,9 +82,6 @@ public class MainActivity extends AppCompatActivity {
 
         /*Load the database object*/
         dbHelper = AppDbHelper.getDbHelper(getApplicationContext());
-
-        /*Load the settings for the application*/
-        settingsHelper = SettingsHelper.getSettingsHelper(getApplicationContext());
 
         /*Check if the application has the permission to write to the external storage*/
         verifyStoragePermissions();
@@ -141,22 +125,6 @@ public class MainActivity extends AppCompatActivity {
     /* -------------------------------- *
      * Private methods
      * -------------------------------- */
-
-    /**
-     * Returns the data bean for the commune information from the configuration file
-     *
-     * @return a data bean of type {@link CommuneDataBean}; otherwise {@code null} if something went wrong in retrieving
-     * the information from the data bean/configuration file
-     */
-    private CommuneDataBean getCommuneDatabean() {
-        CommuneDataBean communeDataBean = new CommuneDataBean(this);
-        if (communeDataBean.getHomeLocation() == null || communeDataBean.getWorkLocation() == null ||
-                communeDataBean.getDefaultDistance() == null) {
-            communeDataBean = null;
-        }
-        return communeDataBean;
-    }
-
     /**
      * Checks and ensures that the application is able to write to the external storage
      */
@@ -173,21 +141,17 @@ public class MainActivity extends AppCompatActivity {
      * Handles when one of the commune buttons pressed.<br>
      * Fills the values map with the values designed for the communes table
      *
-     * @param departure the name of the location where the departure is
-     * @param destination the name of the location where the destination is
-     * @param distance the distance between the start and end point
-     * @param privateCarID the id of the toggle button for the private car
+     * @param work which button was pressed; {@code true} when the work button was pressed; {@code false} when the
+     *             button home was pressed
      */
-    private void handleCommuneButton(String departure, String destination, int distance, int privateCarID) {
-        /*Fill the values*/
-        ContentValues values = new ContentValues();
-        values.put(CommuneTableContract.COLUMN_NAME_DEPARTURE_LOCATION, departure);
-        values.put(CommuneTableContract.COLUMN_NAME_ARRIVAL_LOCATION, destination);
-        values.put(CommuneTableContract.COLUMN_NAME_DISTANCE, distance);
-        values.put(CommuneTableContract.COLUMN_NAME_PRIVATE_CAR, isPrivateCar(privateCarID).toString());
-
-        /*Insert the values into the database*/
-        dbHelper.insert(CommuneTableContract.TABLE_NAME, values);
+    private void handleCommuneButton(boolean work) {
+        CommuneHelper communeHelper = new CommuneHelper(this);
+        try {
+            communeHelper.writeCommuneEntry(work, isPrivateCar(R.id.ToggleButtonDefaultCar));
+        } catch (CommuneException e) {
+            ActivityHelper.showToast(this, e.getMessage());
+            return;
+        }
 
         /*Show toast that the record was saved*/
         ActivityHelper.showToast(this, getString(R.string.DatabaseEntrySuccess));

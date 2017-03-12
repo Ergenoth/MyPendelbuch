@@ -25,7 +25,9 @@
     <string name="StringSettingDistance">Default distance</string>
     <string name="DigitsLocale">0123456789.</string>
     <string name="DatabaseEntrySuccess">Database entry successfully entered</string>
+    <string name="DatabaseEntryError">Entry not written!</string>
     <string name="SettingsDistanceError">Wrong setting for distance! Please check settings!</string>
     <string name="SettingsHomeError">Wrong setting for home location! Please check settings!</string>
     <string name="SettingsWorkError">Wrong setting for work location! Please check settings!</string>
+    <string name="CSVSuccess">CSV file successfully created</string>
 </resources>

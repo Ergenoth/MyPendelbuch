@@ -3,8 +3,6 @@
     <string name="app_name">MyPendelbuch</string>
     <string name="StringCommuteHome">Pendeln nach Hause</string>
     <string name="StringComuteWork">Pendeln zur Arbeit</string>
-    <string name="StringCommuteWorkAlt">Pendeln zur Arbeit von Alternativ</string>
-    <string name="StringCommuteAlt">Pendeln zu Alternativ</string>
     <string name="StringRefuel">Tanken</string>
     <string name="StringDefaultWay">Standard Weg</string>
     <string name="StringPrivateCar">Privates Auto?</string>
@@ -27,7 +25,9 @@
     <string name="StringSettingDistance">Strecke</string>
     <string name="DigitsLocale">0123456789,</string>
     <string name="DatabaseEntrySuccess">Datenbankeintrag erfolgreich erstellt</string>
+    <string name="DatabaseEntryError">Datenbankeintrag konnte nicht erstellt werden!</string>
     <string name="SettingsDistanceError">Fehlerhafte Einstellung für Strecke! Bitte Einstellung prüfen!</string>
     <string name="SettingsHomeError">Fehlerhafte Einstellung für Zuhause! Bitte Einstellung prüfen!</string>
     <string name="SettingsWorkError">Fehlerhafte Einstellung für Arbeit! Bitte Einstellung prüfen!</string>
+    <string name="CSVSuccess">CSV Datei erfolgreich erstellt</string>
 </resources>

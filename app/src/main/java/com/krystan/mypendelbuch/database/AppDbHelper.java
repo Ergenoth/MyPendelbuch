@@ -66,7 +66,7 @@ public class AppDbHelper extends SQLiteOpenHelper implements Serializable {
      * @param tableName the name of the table to insert the values
      * @param values the values which should be inserted into the table
      */
-    public void insert(String tableName, ContentValues values) {
+    public long insert(String tableName, ContentValues values) {
         /*Extent the values with the time stamp. This is for every table the same*/
         Calendar today = Calendar.getInstance();
         values.put(CommonsDB.COLUMN_NAME_DAY, today.get(Calendar.DAY_OF_MONTH));
@@ -78,7 +78,7 @@ public class AppDbHelper extends SQLiteOpenHelper implements Serializable {
 
         /*Insert the values into the requested database*/
         SQLiteDatabase localDB = ensureDB();
-        localDB.insert(tableName, null, values);
+        return localDB.insert(tableName, null, values);
     }
 
     /**

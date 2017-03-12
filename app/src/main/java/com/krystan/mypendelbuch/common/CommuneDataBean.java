@@ -3,6 +3,7 @@ package com.krystan.mypendelbuch.common;
 import android.content.Context;
 
 import com.krystan.mypendelbuch.R;
+import com.krystan.mypendelbuch.exception.CommuneException;
 
 /**
  * Data bean for holding the information the default commune buttons need.<br>
@@ -34,53 +35,48 @@ public class CommuneDataBean {
      * ------------------------- */
     /**
      * Returns the home location read from the configuration file
-     * @return {@link String} representation from the home location; otherwise {@code null} when there was an error
-     * in the settings for the home location
+     *
+     * @return {@link String} representation from the home location
+     * @throws CommuneException when there was an error in validating the data
      */
-    public String getHomeLocation() {
+    public String getHomeLocation() throws CommuneException {
         String returnValue = homeLocation;
-        /*If the return value is for some reason already null do nothing. If not, check if the entered information
-        * is usable from the application*/
-        if (returnValue != null && returnValue.isEmpty() == true) {
-            returnValue = null;
+        /*If the return value is for some reason null or empty, throw an exception*/
+        if (returnValue == null || returnValue.isEmpty() == true) {
+            throw new CommuneException(applicationContext.getString(R.string.SettingsHomeError));
         }
         return returnValue;
     }
 
     /**
      * Returns the work location read from the configuration file
-     * @return {@link String} representation from the work location; otherwise {@code null} when there was an error
-     * in the settings for the work location
+     *
+     * @return {@link String} representation from the work location
+     * @throws CommuneException when there was an error in validating the data
      */
-    public String getWorkLocation() {
+    public String getWorkLocation() throws CommuneException {
         String returnValue = workLocation;
-        /*If the return value is for some reason already null do nothing. If not, check if the entered information
-        * is usable from the application*/
-        if (returnValue != null && returnValue.isEmpty() == true) {
-            ActivityHelper.showToast(applicationContext, applicationContext.getString(R.string.SettingsHomeError));
-            returnValue = null;
+        /*If the return value is for some reason null or empty, throw an exception*/
+        if (returnValue == null || returnValue.isEmpty() == true) {
+            throw new CommuneException(applicationContext.getString(R.string.SettingsWorkError));
         }
         return returnValue;
     }
 
     /**
      * Returns the default distance read from the configuration file
-     * @return {@link Integer} representation from the default distance; otherwise {@code null} when there was an error
-     * in the settings for the work location
+     *
+     * @return {@link Integer} representation from the default distance
+     * @throws CommuneException when there was an error in validating the data
      */
-    public Integer getDefaultDistance() {
+    public Integer getDefaultDistance() throws CommuneException {
         Integer returnValue;
-        /*If the information are not read correctly from the configuration file*/
-        if (defaultDistance == null) {
-            returnValue = null;
-        /*Check if the read information can be transformed into a valid integer*/
-        } else {
-            try {
-                returnValue = Integer.valueOf(defaultDistance);
-            } catch (NumberFormatException e) {
-                returnValue = null;
-                ActivityHelper.showToast(applicationContext, applicationContext.getString(R.string.SettingsDistanceError));
-            }
+        try {
+            returnValue = Integer.valueOf(defaultDistance);
+        } catch (NumberFormatException e) {
+            throw new CommuneException(applicationContext.getString(R.string.SettingsDistanceError), e);
+        } catch (NullPointerException e1) {
+            throw new CommuneException(applicationContext.getString(R.string.SettingsDistanceError), e1);
         }
         return returnValue;
     }
