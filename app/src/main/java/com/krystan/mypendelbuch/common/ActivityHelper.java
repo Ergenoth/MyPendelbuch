@@ -1,10 +1,16 @@
 package com.krystan.mypendelbuch.common;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import java.text.NumberFormat;
 import java.text.ParseException;
 
 /**
- * Created by Robert on 11.03.2017.
+ * Abstract class with abstract helper methods for the various activity in the app
+ *
+ * @author Robert Duck
+ * @since 11.03.2017
  */
 
 public abstract class ActivityHelper {
@@ -24,5 +30,15 @@ public abstract class ActivityHelper {
             e.printStackTrace();
         }
         return number.floatValue();
+    }
+
+    /**
+     * Shows a toast
+     *
+     * @param activityContext the context from the activity calling the toast
+     * @param message the message for the toast
+     */
+    public static void showToast(Context activityContext, String message) {
+        Toast.makeText(activityContext, message, Toast.LENGTH_SHORT).show();
     }
 }

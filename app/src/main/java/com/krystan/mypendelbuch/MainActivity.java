@@ -4,9 +4,9 @@ import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.krystan.mypendelbuch.common.ActivityHelper;
+import com.krystan.mypendelbuch.common.CommuneDataBean;
 import com.krystan.mypendelbuch.common.SettingsHelper;
 import com.krystan.mypendelbuch.csv.CsvExportCommune;
 import com.krystan.mypendelbuch.csv.CsvExportRefuel;
@@ -39,18 +41,24 @@ public class MainActivity extends AppCompatActivity {
     public void handleButtonClick(View view) {
         switch (view.getId()) {
             case R.id.ButtonWorkDefault:
+                CommuneDataBean dataBeanWork = getCommuneDatabean();
+                /*Something went wrong. Don't proceed further*/
+                if (dataBeanWork == null) {
+                    return;
+                }
                 handleCommuneButton(
-                        settingsHelper.getSettingValue(SettingsHelper.SETTING_HOME),
-                        settingsHelper.getSettingValue(SettingsHelper.SETTING_WORK),
-                        Integer.parseInt(settingsHelper.getSettingValue(SettingsHelper.SETTING_DISTANCE)),
+                        dataBeanWork.getHomeLocation(),
+                        dataBeanWork.getWorkLocation(),
+                        dataBeanWork.getDefaultDistance().intValue(),
                         R.id.ToggleButtonDefaultCar);
                 break;
             case R.id.ButtonDefaultHome:
-                handleCommuneButton(
-                        settingsHelper.getSettingValue(SettingsHelper.SETTING_WORK),
-                        settingsHelper.getSettingValue(SettingsHelper.SETTING_HOME),
-                        Integer.parseInt(settingsHelper.getSettingValue(SettingsHelper.SETTING_DISTANCE)),
-                        R.id.ToggleButtonDefaultCar);
+                CommuneDataBean dataBeanHome = getCommuneDatabean();
+                /*Something went wrong. Don't proceed further*/
+                if (dataBeanHome == null) {
+                    return;
+                }
+                handleCommuneButton(work, home, Integer.parseInt(distance), R.id.ToggleButtonDefaultCar);
                 break;
             case R.id.ButtonExportCommune:
                 /*Export commune entries*/
@@ -133,6 +141,22 @@ public class MainActivity extends AppCompatActivity {
     /* -------------------------------- *
      * Private methods
      * -------------------------------- */
+
+    /**
+     * Returns the data bean for the commune information from the configuration file
+     *
+     * @return a data bean of type {@link CommuneDataBean}; otherwise {@code null} if something went wrong in retrieving
+     * the information from the data bean/configuration file
+     */
+    private CommuneDataBean getCommuneDatabean() {
+        CommuneDataBean communeDataBean = new CommuneDataBean(this);
+        if (communeDataBean.getHomeLocation() == null || communeDataBean.getWorkLocation() == null ||
+                communeDataBean.getDefaultDistance() == null) {
+            communeDataBean = null;
+        }
+        return communeDataBean;
+    }
+
     /**
      * Checks and ensures that the application is able to write to the external storage
      */
@@ -166,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         dbHelper.insert(CommuneTableContract.TABLE_NAME, values);
 
         /*Show toast that the record was saved*/
-        showCommuneToast();
+        ActivityHelper.showToast(this, getString(R.string.DatabaseEntrySuccess));
     }
 
     /**
@@ -178,13 +202,5 @@ public class MainActivity extends AppCompatActivity {
         ToggleButton toggleButton = (ToggleButton)findViewById(widgetID);
         Boolean isPrivate = new Boolean(toggleButton.isChecked());
         return isPrivate;
-    }
-
-    /**
-     * Shows the toast, that the save process was successful
-     */
-    private void showCommuneToast() {
-        Toast savedToast = Toast.makeText(this, "Datenbankeintrag erfolgreich gespeichert", Toast.LENGTH_SHORT);
-        savedToast.show();
     }
 }
