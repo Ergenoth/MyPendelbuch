@@ -1,7 +1,6 @@
 package com.krystan.mypendelbuch;
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -11,17 +10,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.krystan.mypendelbuch.common.ActivityHelper;
-import com.krystan.mypendelbuch.common.CommuneDataBean;
 import com.krystan.mypendelbuch.common.CommuneHelper;
-import com.krystan.mypendelbuch.common.SettingsHelper;
 import com.krystan.mypendelbuch.csv.CsvExportCommune;
 import com.krystan.mypendelbuch.csv.CsvExportRefuel;
 import com.krystan.mypendelbuch.database.AppDbHelper;
-import com.krystan.mypendelbuch.database.CommuneTableContract;
 import com.krystan.mypendelbuch.exception.CommuneException;
 
 public class MainActivity extends AppCompatActivity {

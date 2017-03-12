@@ -1,29 +1,19 @@
 package com.krystan.mypendelbuch;
 
-import android.content.ContentValues;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.krystan.mypendelbuch.common.ActivityHelper;
-import com.krystan.mypendelbuch.common.SettingsHelper;
-import com.krystan.mypendelbuch.database.AppDbHelper;
-import com.krystan.mypendelbuch.database.CommuneTableContract;
-
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Locale;
+import com.krystan.mypendelbuch.common.CommuneHelper;
+import com.krystan.mypendelbuch.exception.CommuneException;
 
 public class ActivityAlternative extends AppCompatActivity {
     /* -------------------------------- *
      * Private members
      * -------------------------------- */
-    private AppDbHelper dbHelper = null;
-    private SettingsHelper settingsHelper = null;
     private String alternativeLocation = "";
     private float alternativeDistance = 0f;
     private Boolean privateCar = true;
@@ -39,9 +29,9 @@ public class ActivityAlternative extends AppCompatActivity {
     public void buttonCommuneClick(View view) {
         getEnteredValues();
         if (view.getId() == R.id.ButtonHomeAlternative) {
-            writeValues(false);
+            handleCommuneButton(false);
         } else {
-            writeValues(true);
+            handleCommuneButton(true);
         }
         finish();
     }
@@ -53,11 +43,6 @@ public class ActivityAlternative extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alternative);
-
-        /*Get the database helper*/
-        dbHelper = AppDbHelper.getDbHelper(getApplicationContext());
-        /*Get settings helper*/
-        settingsHelper = SettingsHelper.getSettingsHelper(getApplicationContext());
     }
 
     /* -------------------------------- *
@@ -81,26 +66,22 @@ public class ActivityAlternative extends AppCompatActivity {
     }
 
     /**
-     * Writes the values from the activity to the database
+     * Handles when one of the commune buttons pressed.<br>
+     * Fills the values map with the values designed for the communes table
+     *
+     * @param work which button was pressed; {@code true} when the work button was pressed; {@code false} when the
+     *             button home was pressed
      */
-    private void writeValues(boolean work) {
-        /*Fill the values*/
-        ContentValues values = new ContentValues();
-        if (work == true) {
-            values.put(CommuneTableContract.COLUMN_NAME_DEPARTURE_LOCATION, alternativeLocation);
-            values.put(CommuneTableContract.COLUMN_NAME_ARRIVAL_LOCATION, settingsHelper.getSettingValue(SettingsHelper.SETTING_WORK));
-        } else {
-            values.put(CommuneTableContract.COLUMN_NAME_DEPARTURE_LOCATION, settingsHelper.getSettingValue(SettingsHelper.SETTING_WORK));
-            values.put(CommuneTableContract.COLUMN_NAME_ARRIVAL_LOCATION, alternativeLocation);
+    private void handleCommuneButton(boolean work) {
+        CommuneHelper communeHelper = new CommuneHelper(this);
+        try {
+            communeHelper.writeCommuneEntry(work, privateCar, alternativeLocation, alternativeDistance);
+        } catch (CommuneException e) {
+            ActivityHelper.showToast(this, e.getMessage());
+            return;
         }
-        values.put(CommuneTableContract.COLUMN_NAME_DISTANCE, alternativeDistance);
-        values.put(CommuneTableContract.COLUMN_NAME_PRIVATE_CAR, privateCar.toString());
-
-        /*Insert the values into the database*/
-        dbHelper.insert(CommuneTableContract.TABLE_NAME, values);
 
         /*Show toast that the record was saved*/
-        Toast savedToast = Toast.makeText(this, "Datenbankeintrag erfolgreich gespeichert", Toast.LENGTH_SHORT);
-        savedToast.show();
+        ActivityHelper.showToast(this, getString(R.string.DatabaseEntrySuccess));
     }
 }
