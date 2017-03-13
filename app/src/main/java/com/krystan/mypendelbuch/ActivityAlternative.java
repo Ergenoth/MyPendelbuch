@@ -10,6 +10,8 @@ import com.krystan.mypendelbuch.common.ActivityHelper;
 import com.krystan.mypendelbuch.common.CommuneHelper;
 import com.krystan.mypendelbuch.exception.CommuneException;
 
+import java.text.ParseException;
+
 public class ActivityAlternative extends AppCompatActivity {
     /* -------------------------------- *
      * Private members
@@ -27,7 +29,6 @@ public class ActivityAlternative extends AppCompatActivity {
      * @param view the clicked button
      */
     public void buttonCommuneClick(View view) {
-        getEnteredValues();
         if (view.getId() == R.id.ButtonHomeAlternative) {
             handleCommuneButton(false);
         } else {
@@ -50,15 +51,21 @@ public class ActivityAlternative extends AppCompatActivity {
      * -------------------------------- */
     /**
      * Reads the entered values from the activity
+     *
+     * @throws CommuneException when parsing of the alternative distance fails
      */
-    private void getEnteredValues() {
+    private void getEnteredValues() throws CommuneException {
         /*Read alternative location*/
         EditText editAlternativeLocation = (EditText) findViewById(R.id.EditAlternativeLocation);
         alternativeLocation = editAlternativeLocation.getText().toString();
 
         /*Read alternative distance*/
         EditText editAlternativeDistance = (EditText) findViewById(R.id.EditAlternativeDistance);
-        alternativeDistance = ActivityHelper.parseFloatValue(editAlternativeDistance.getText().toString());
+        try {
+            alternativeDistance = ActivityHelper.parseFloatValue(editAlternativeDistance.getText().toString());
+        } catch (ParseException e) {
+            throw new CommuneException(getString(R.string.ErrorParsingNumeric), e);
+        }
 
         /*Read flat of private car*/
         ToggleButton toggleButtonPrivateCar = (ToggleButton) findViewById(R.id.ToggleButtonAlternativeCar);
@@ -75,6 +82,7 @@ public class ActivityAlternative extends AppCompatActivity {
     private void handleCommuneButton(boolean work) {
         CommuneHelper communeHelper = new CommuneHelper(this);
         try {
+            getEnteredValues();
             communeHelper.writeCommuneEntry(work, privateCar, alternativeLocation, alternativeDistance);
         } catch (CommuneException e) {
             ActivityHelper.showToast(this, e.getMessage());

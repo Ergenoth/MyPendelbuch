@@ -30,4 +30,5 @@
     <string name="SettingsHomeError">Wrong setting for home location! Please check settings!</string>
     <string name="SettingsWorkError">Wrong setting for work location! Please check settings!</string>
     <string name="CSVSuccess">CSV file successfully created</string>
+    <string name="ErrorParsingNumeric">Error in parsing the numeric values</string>
 </resources>

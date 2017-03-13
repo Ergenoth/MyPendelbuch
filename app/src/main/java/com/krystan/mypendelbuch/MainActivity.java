@@ -17,6 +17,7 @@ import com.krystan.mypendelbuch.common.CommuneHelper;
 import com.krystan.mypendelbuch.csv.CsvExportCommune;
 import com.krystan.mypendelbuch.csv.CsvExportRefuel;
 import com.krystan.mypendelbuch.database.AppDbHelper;
+import com.krystan.mypendelbuch.exception.CSVException;
 import com.krystan.mypendelbuch.exception.CommuneException;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,16 +45,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.ButtonExportCommune:
                 /*Export commune entries*/
-                CsvExportCommune csvExportCommune = new CsvExportCommune(dbHelper);
-                csvExportCommune.createCSV();
-                ActivityHelper.showToast(this, getString(R.string.CSVSuccess));
+                handleCommuneExport();
                 break;
             case R.id.ButtonExportRefuel:
                 /*Export refuel entries*/
-                CsvExportRefuel csvExportRefuel = new CsvExportRefuel(dbHelper);
-                csvExportRefuel.createCSV();
-                /*Show that everything worked*/
-                ActivityHelper.showToast(this, getString(R.string.CSVSuccess));
+                handleRefuelExport();
                 break;
             case R.id.ButtonAlternative:
                 Intent altIntent = new Intent(this, ActivityAlternative.class);
@@ -130,6 +126,34 @@ public class MainActivity extends AppCompatActivity {
         if (permission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
+    }
+
+    /**
+     * Handles the export of the entered refuel entries
+     */
+    private void handleRefuelExport() {
+        CsvExportRefuel csvExportRefuel = new CsvExportRefuel(dbHelper);
+        try {
+            csvExportRefuel.createCSV();
+        } catch (CSVException e) {
+            ActivityHelper.showToast(this, e.getCause().getMessage());
+            return;
+        }
+        ActivityHelper.showToast(this, getString(R.string.CSVSuccess));
+    }
+
+    /**
+     * Handles the export of the entered commune entries
+     */
+    private void handleCommuneExport() {
+        CsvExportCommune csvExportCommune = new CsvExportCommune(dbHelper);
+        try {
+            csvExportCommune.createCSV();
+        } catch (CSVException e) {
+            ActivityHelper.showToast(this, e.getCause().getMessage());
+            return;
+        }
+        ActivityHelper.showToast(this, getString(R.string.CSVSuccess));
     }
 
     /**

@@ -1,15 +1,16 @@
 package com.krystan.mypendelbuch;
 
 import android.content.ContentValues;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.krystan.mypendelbuch.common.ActivityHelper;
 import com.krystan.mypendelbuch.database.AppDbHelper;
 import com.krystan.mypendelbuch.database.RefuelTableContract;
+
+import java.text.ParseException;
 
 public class ActivityRefuel extends AppCompatActivity {
     /* ---------------------------------- *
@@ -33,11 +34,16 @@ public class ActivityRefuel extends AppCompatActivity {
     public void handleButtonClick(View view) {
         switch(view.getId()) {
             case R.id.ButtonSave:
-                readActivityEntries();
+                try {
+                    readActivityEntries();
+                } catch (ParseException e) {
+                    ActivityHelper.showToast(this, getString(R.string.ErrorParsingNumeric));
+                    break;
+                }
                 writeDatabase();
-                finish();
                 break;
         }
+        finish();
     }
 
     /* ---------------------------------- *
@@ -69,32 +75,37 @@ public class ActivityRefuel extends AppCompatActivity {
         dbHelper.insert(RefuelTableContract.TABLE_NAME, values);
 
         /*Show toast that the record was saved*/
-        Toast savedToast = Toast.makeText(this, "Datenbankeintrag erfolgreich gespeichert", Toast.LENGTH_SHORT);
-        savedToast.show();
+        ActivityHelper.showToast(this, getString(R.string.DatabaseEntrySuccess));
     }
 
     /**
      * Reads all the input fields with the information for the database
+     *
+     * @throws ParseException when parsing the numeric values from the activity fails
      */
-    private void readActivityEntries() {
+    private void readActivityEntries() throws ParseException {
         /*Read the name of the gas station*/
         EditText gasStation = (EditText) findViewById(R.id.EditNameStation);
         nameGasStation = gasStation.getText().toString();
 
-        /*Read the overall distance of the car*/
-        EditText overallDistance = (EditText) findViewById(R.id.EditDistanceAll);
-        amountOverallDistance = ActivityHelper.parseFloatValue(overallDistance.getText().toString());
+        try {
+            /*Read the overall distance of the car*/
+            EditText overallDistance = (EditText) findViewById(R.id.EditDistanceAll);
+            amountOverallDistance = ActivityHelper.parseFloatValue(overallDistance.getText().toString());
 
-        /*Read the drove distance of the car*/
-        EditText droveDistance = (EditText) findViewById(R.id.EditDistanceDrove);
-        amountDroveDistance = ActivityHelper.parseFloatValue(droveDistance.getText().toString());
+            /*Read the drove distance of the car*/
+            EditText droveDistance = (EditText) findViewById(R.id.EditDistanceDrove);
+            amountDroveDistance = ActivityHelper.parseFloatValue(droveDistance.getText().toString());
 
-        /*Read the amount of price for the last refuel*/
-        EditText price = (EditText) findViewById(R.id.EditPrice);
-        amountPrice = ActivityHelper.parseFloatValue(price.getText().toString());
+            /*Read the amount of price for the last refuel*/
+            EditText price = (EditText) findViewById(R.id.EditPrice);
+            amountPrice = ActivityHelper.parseFloatValue(price.getText().toString());
 
-        /*Read the amount of liters put in the tank*/
-        EditText liter = (EditText) findViewById(R.id.EditAmount);
-        amountLiter = ActivityHelper.parseFloatValue(liter.getText().toString());
+            /*Read the amount of liters put in the tank*/
+            EditText liter = (EditText) findViewById(R.id.EditAmount);
+            amountLiter = ActivityHelper.parseFloatValue(liter.getText().toString());
+        } catch (ParseException e) {
+            throw e;
+        }
     }
 }

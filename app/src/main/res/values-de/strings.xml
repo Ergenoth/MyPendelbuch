@@ -30,4 +30,5 @@
     <string name="SettingsHomeError">Fehlerhafte Einstellung für Zuhause! Bitte Einstellung prüfen!</string>
     <string name="SettingsWorkError">Fehlerhafte Einstellung für Arbeit! Bitte Einstellung prüfen!</string>
     <string name="CSVSuccess">CSV Datei erfolgreich erstellt</string>
+    <string name="ErrorParsingNumeric">Numerische Werte können nicht geparsed werden</string>
 </resources>
